@@ -30,40 +30,8 @@
 \WisdomScore{15}
 \CharismaScore{17}
 
-% Ability modifiers
-\StrengthModifier{+1}
-\DexterityModifier{0}
-\ConstitutionModifier{+2}
-\IntelligenceModifier{+2}
-\WisdomModifier{+2}
-\CharismaModifier{+3}
+\Proficiency{4}
 
-% Saving Throws
-\StrengthSavingThrowModifier{+1}
-\DexteritySavingThrowModifier{0}
-\ConstitutionSavingThrowModifier{+5}
-\IntelligenceSavingThrowModifier{+2}
-\WisdomSavingThrowModifier{+2}
-\CharismaSavingThrowModifier{+6}
-
-\AcrobaticsSkillModifier{0}
-\AnimalHandlingSkillModifier{+2}
-\ArcanaSkillModifier{+6}
-\AthleticsSkillModifier{+1}
-\DeceptionSkillModifier{+3}
-\HistorySkillModifier{+6}
-\InsightSkillModifier{+6}
-\IntimidationSkillModifier{+3}
-\InvestigationSkillModifier{+7} % +5 Observant
-\MedicineSkillModifier{+2}
-\NatureSkillModifier{+2}
-\PerceptionSkillModifier{+7} % +5 Observant
-\PerformanceSkillModifier{+3}
-\PersuasionSkillModifier{+7} 
-\ReligionSkillModifier{+2}
-\SleightOfHandSkillModifier{0}
-\StealthSkillModifier{0}
-\SurvivalSkillModifier{+2}
 
 % Prociciencies
 \StrengthProficiency{}
@@ -91,12 +59,13 @@
 \SleightOfHandProficiency{}
 \StealthProficiency{}
 
-\Inspiration{}
-\Proficiency{+4}
-\Perception{17} %+5 Observant
+\InvestigationBonus{5} % +5 Observant
+\PerceptionBonus{5} % +5 Observant
 
-\ArmorClass{13}
-\Initiative{0}
+\Inspiration{}
+
+\LightArmor{11}
+
 \Speed{30ft}
 \MaxHitPoints{76}
 \CurrentHitPoints{76}
@@ -111,9 +80,9 @@
 \PP{}
 
 
-\AddWeapon{Dagger}{+5}{1d4+1 p}
-\AddWeapon{Light Crossbow}{+4}{1d8 p}
-\AddWeapon{Stiletto Dagger}{+5}{1d3 p}
+\AddProficientDexWeapon{Dagger}{1d4}{p}
+\AddProficientDexWeapon{Light Crossbow}{1d8}{p}
+\AddProficientDexWeapon{Stiletto Dagger}{1d3}{p}
 
 \AttacksAdditional{
 \textbf{Arcane Focus:}\\A glass orb filled with moving smoke, known as Dagmar\\
@@ -225,9 +194,7 @@ Allied with the cult of the dragon. Lorem ipsum dolor sit amet, consectetur adip
 % Magic
 
 \SpellcastingClass{Sorcerer}
-\SpellcastingAbility{CHA}
-\SpellSaveDC{15}
-\SpellAttackBonus{+7}
+\SpellcastingAbility{Cha}
 
 \CantripSlotA{Chill Touch (V, S)}
 \CantripSlotB{Eldrich Blast (V, S) (Spell Sniper)}
