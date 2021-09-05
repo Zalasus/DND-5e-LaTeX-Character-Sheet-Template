@@ -1,3 +1,7 @@
+
+% adds a plus prefix if argument is positive
+\newcommand{\ModPlusPrefix}[1]{\ifthenelse{#1<0}{#1}{+#1}}
+
 % BANNER INFO
 \newcommand{\CharacterNameValue}{}
 \newcommand{\ClassValue}{}
@@ -17,100 +21,216 @@
 
 % PROFICIENCY ETC
 \newcommand{\InspirationValue}{}
-\newcommand{\ProficiencyValue}{}
-\newcommand{\PerceptionValue}{}
-
 \newcommand{\Inspiration}[1]{\renewcommand{\InspirationValue}{#1}}
-\newcommand{\Proficiency}[1]{\renewcommand{\ProficiencyValue}{#1}}
-\newcommand{\Perception}[1]{\renewcommand{\PerceptionValue}{#1}}
+
+\newcounter{ProficiencyBonus}
+\newcommand{\Proficiency}[1]{\setcounter{ProficiencyBonus}{#1}}
+\newcommand{\ProficiencyValue}{\ModPlusPrefix{\theProficiencyBonus}}
 
 % ABILITY SCORES
-\newcommand{\StrengthScoreValue}{}
-\newcommand{\DexterityScoreValue}{}
-\newcommand{\ConstitutionScoreValue}{}
-\newcommand{\IntelligenceScoreValue}{}
-\newcommand{\WisdomScoreValue}{}
-\newcommand{\CharismaScoreValue}{}
+\newcounter{StrScore}
+\newcounter{DexScore}
+\newcounter{ConScore}
+\newcounter{IntScore}
+\newcounter{WisScore}
+\newcounter{ChaScore}
+\newcounter{StrMod}
+\newcounter{DexMod}
+\newcounter{ConMod}
+\newcounter{IntMod}
+\newcounter{WisMod}
+\newcounter{ChaMod}
+\newcommand{\SetScore}[2]{
+    \setcounter{#1Score}{#2}
+    \ifthenelse{\isodd{\value{#1Score}}}
+        {\setcounter{#1Mod}{(#2-11)/2}}
+        {\setcounter{#1Mod}{(#2-10)/2}}
+}
 
-\newcommand{\StrengthScore}[1]{\renewcommand{\StrengthScoreValue}{#1}}
-\newcommand{\DexterityScore}[1]{\renewcommand{\DexterityScoreValue}{#1}}
-\newcommand{\ConstitutionScore}[1]{\renewcommand{\ConstitutionScoreValue}{#1}}
-\newcommand{\IntelligenceScore}[1]{\renewcommand{\IntelligenceScoreValue}{#1}}
-\newcommand{\WisdomScore}[1]{\renewcommand{\WisdomScoreValue}{#1}}
-\newcommand{\CharismaScore}[1]{\renewcommand{\CharismaScoreValue}{#1}}
+\newcommand{\StrengthScore}[1]{\SetScore{Str}{#1}}
+\newcommand{\DexterityScore}[1]{\SetScore{Dex}{#1}}
+\newcommand{\ConstitutionScore}[1]{\SetScore{Con}{#1}}
+\newcommand{\IntelligenceScore}[1]{\SetScore{Int}{#1}}
+\newcommand{\WisdomScore}[1]{\SetScore{Wis}{#1}}
+\newcommand{\CharismaScore}[1]{\SetScore{Cha}{#1}}
 
-% ABILITY MODIFIERS
-\newcommand{\StrengthModifierValue}{}
-\newcommand{\DexterityModifierValue}{}
-\newcommand{\ConstitutionModifierValue}{}
-\newcommand{\IntelligenceModifierValue}{}
-\newcommand{\WisdomModifierValue}{}
-\newcommand{\CharismaModifierValue}{}
+\newcommand{\StrengthModifierBonus}[1]{\addtocounter{StrMod}{#1}}
+\newcommand{\DexterityModifierBonus}[1]{\addtocounter{DexMod}{#1}}
+\newcommand{\ConstitutionModifierBonus}[1]{\addtocounter{ConMod}{#1}}
+\newcommand{\IntelligenceModifierBonus}[1]{\addtocounter{IntMod}{#1}}
+\newcommand{\WisdomModifierBonus}[1]{\addtocounter{WisMod}{#1}}
+\newcommand{\CharismaModifierBonus}[1]{\addtocounter{ChaMod}{#1}}
 
-\newcommand{\StrengthModifier}[1]{\renewcommand{\StrengthModifierValue}{#1}}
-\newcommand{\DexterityModifier}[1]{\renewcommand{\DexterityModifierValue}{#1}}
-\newcommand{\ConstitutionModifier}[1]{\renewcommand{\ConstitutionModifierValue}{#1}}
-\newcommand{\IntelligenceModifier}[1]{\renewcommand{\IntelligenceModifierValue}{#1}}
-\newcommand{\WisdomModifier}[1]{\renewcommand{\WisdomModifierValue}{#1}}
-\newcommand{\CharismaModifier}[1]{\renewcommand{\CharismaModifierValue}{#1}}
+% swap bubble meaning
+\newboolean{SwapScoreAndMod}
+\setboolean{SwapScoreAndMod}{true}
 
-% SAVING THROWS
-\newcommand{\StrengthSavingThrowModifierValue}{}
-\newcommand{\DexteritySavingThrowModifierValue}{}
-\newcommand{\ConstitutionSavingThrowModifierValue}{}
-\newcommand{\IntelligenceSavingThrowModifierValue}{}
-\newcommand{\WisdomSavingThrowModifierValue}{}
-\newcommand{\CharismaSavingThrowModifierValue}{}
+\ifthenelse{\boolean{SwapScoreAndMod}}
+{
+\newcommand{\StrengthModifierValue}{\theStrScore}
+\newcommand{\DexterityModifierValue}{\theDexScore}
+\newcommand{\ConstitutionModifierValue}{\theConScore}
+\newcommand{\IntelligenceModifierValue}{\theIntScore}
+\newcommand{\WisdomModifierValue}{\theWisScore}
+\newcommand{\CharismaModifierValue}{\theChaScore}
+\newcommand{\StrengthScoreValue}{\ModPlusPrefix{\theStrMod}}
+\newcommand{\DexterityScoreValue}{\ModPlusPrefix{\theDexMod}}
+\newcommand{\ConstitutionScoreValue}{\ModPlusPrefix{\theConMod}}
+\newcommand{\IntelligenceScoreValue}{\ModPlusPrefix{\theIntMod}}
+\newcommand{\WisdomScoreValue}{\ModPlusPrefix{\theWisMod}}
+\newcommand{\CharismaScoreValue}{\ModPlusPrefix{\theChaMod}}
+}
+{
+\newcommand{\StrengthScoreValue}{\theStrScore}
+\newcommand{\DexterityScoreValue}{\theDexScore}
+\newcommand{\ConstitutionScoreValue}{\theConScore}
+\newcommand{\IntelligenceScoreValue}{\theIntScore}
+\newcommand{\WisdomScoreValue}{\theWisScore}
+\newcommand{\CharismaScoreValue}{\theChaScore}
+\newcommand{\StrengthModifierValue}{\ModPlusPrefix{\theStrMod}}
+\newcommand{\DexterityModifierValue}{\ModPlusPrefix{\theDexMod}}
+\newcommand{\ConstitutionModifierValue}{\ModPlusPrefix{\theConMod}}
+\newcommand{\IntelligenceModifierValue}{\ModPlusPrefix{\theIntMod}}
+\newcommand{\WisdomModifierValue}{\ModPlusPrefix{\theWisMod}}
+\newcommand{\CharismaModifierValue}{\ModPlusPrefix{\theChaMod}}
+}
 
-\newcommand{\StrengthSavingThrowModifier}[1]{\renewcommand{\StrengthSavingThrowModifierValue}{#1}}
-\newcommand{\DexteritySavingThrowModifier}[1]{\renewcommand{\DexteritySavingThrowModifierValue}{#1}}
-\newcommand{\ConstitutionSavingThrowModifier}[1]{\renewcommand{\ConstitutionSavingThrowModifierValue}{#1}}
-\newcommand{\IntelligenceSavingThrowModifier}[1]{\renewcommand{\IntelligenceSavingThrowModifierValue}{#1}}
-\newcommand{\WisdomSavingThrowModifier}[1]{\renewcommand{\WisdomSavingThrowModifierValue}{#1}}
-\newcommand{\CharismaSavingThrowModifier}[1]{\renewcommand{\CharismaSavingThrowModifierValue}{#1}}
+% SKILLS & SAVING THROWS
+\newcounter{StrStMod}
+\newcounter{DexStMod}
+\newcounter{ConStMod}
+\newcounter{IntStMod}
+\newcounter{WisStMod}
+\newcounter{ChaStMod}
+\newcounter{AcrobaticsMod}
+\newcounter{AnimalHandlingMod}
+\newcounter{ArcanaMod}
+\newcounter{AthleticsMod}
+\newcounter{DeceptionMod}
+\newcounter{HistoryMod}
+\newcounter{InsightMod}
+\newcounter{IntimidationMod}
+\newcounter{InvestigationMod}
+\newcounter{MedicineMod}
+\newcounter{NatureMod}
+\newcounter{PerceptionMod}
+\newcounter{PerformanceMod}
+\newcounter{PersuasionMod}
+\newcounter{ReligionMod}
+\newcounter{SleightOfHandMod}
+\newcounter{StealthMod}
+\newcounter{SurvivalMod}
+\newrgbcolor{strengthproficiency}{1 1 1}
+\newrgbcolor{dexterityproficiency}{1 1 1}
+\newrgbcolor{constitutionproficiency}{1 1 1}
+\newrgbcolor{intelligenceproficiency}{1 1 1}
+\newrgbcolor{wisdomproficiency}{1 1 1}
+\newrgbcolor{charismaproficiency}{1 1 1}
+\newrgbcolor{acrobaticsproficiency}{1 1 1}
+\newrgbcolor{animalhandlingproficiency}{1 1 1}
+\newrgbcolor{arcanaproficiency}{1 1 1}
+\newrgbcolor{athleticsproficiency}{1 1 1}
+\newrgbcolor{deceptionproficiency}{1 1 1}
+\newrgbcolor{historyproficiency}{1 1 1}
+\newrgbcolor{insightproficiency}{1 1 1}
+\newrgbcolor{intimidationproficiency}{1 1 1}
+\newrgbcolor{investigationproficiency}{1 1 1}
+\newrgbcolor{medicineproficiency}{1 1 1}
+\newrgbcolor{natureproficiency}{1 1 1}
+\newrgbcolor{perceptionproficiency}{1 1 1}
+\newrgbcolor{performanceproficiency}{1 1 1}
+\newrgbcolor{persuasionproficiency}{1 1 1}
+\newrgbcolor{religionproficiency}{1 1 1}
+\newrgbcolor{sleightofhandproficiency}{1 1 1}
+\newrgbcolor{stealthproficiency}{1 1 1}
+\newrgbcolor{survivalproficiency}{1 1 1}
+\newcommand{\SetProf}[4]{   % {modCounterName}{colorName}{attrMod}{bool}
+    \ifthenelse{\equal{#4}{True}}
+        {\newrgbcolor{#2}{0 0 0}\setcounter{#1}{#3+\theProficiencyBonus}}
+        {\setcounter{#1}{#3}}
+}
 
-%SKILLS
-\newcommand{\AcrobaticsSkillModifierValue}{}
-\newcommand{\AnimalHandlingSkillModifierValue}{}
-\newcommand{\ArcanaSkillModifierValue}{}
-\newcommand{\AthleticsSkillModifierValue}{}
-\newcommand{\DeceptionSkillModifierValue}{}
-\newcommand{\HistorySkillModifierValue}{}
-\newcommand{\InsightSkillModifierValue}{}
-\newcommand{\IntimidationSkillModifierValue}{}
-\newcommand{\InvestigationSkillModifierValue}{}
-\newcommand{\MedicineSkillModifierValue}{}
-\newcommand{\NatureSkillModifierValue}{}
-\newcommand{\PerceptionSkillModifierValue}{}
-\newcommand{\PerformanceSkillModifierValue}{}
-\newcommand{\PersuasionSkillModifierValue}{}
-\newcommand{\ReligionSkillModifierValue}{}
-\newcommand{\SleightOfHandSkillModifierValue}{}
-\newcommand{\StealthSkillModifierValue}{}
-\newcommand{\SurvivalSkillModifierValue}{}
+\newcommand{\StrengthProficiency}[1]{\SetProf{StrStMod}{strengthproficiency}{\theStrMod}{#1}}
+\newcommand{\DexterityProficiency}[1]{\SetProf{DexStMod}{dexterityproficiency}{\theDexMod}{#1}}
+\newcommand{\ConstitutionProficiency}[1]{\SetProf{ConStMod}{constitutionproficiency}{\theConMod}{#1}}
+\newcommand{\IntelligenceProficiency}[1]{\SetProf{IntStMod}{intelligenceproficiency}{\theIntMod}{#1}}
+\newcommand{\WisdomProficiency}[1]{\SetProf{WisStMod}{wisdomproficiency}{\theWisMod}{#1}}
+\newcommand{\CharismaProficiency}[1]{\SetProf{ChaStMod}{charismaproficiency}{\theChaMod}{#1}}
 
-\newcommand{\AcrobaticsSkillModifier}[1]{\renewcommand{\AcrobaticsSkillModifierValue}{#1}}
-\newcommand{\AnimalHandlingSkillModifier}[1]{\renewcommand{\AnimalHandlingSkillModifierValue}{#1}}
-\newcommand{\ArcanaSkillModifier}[1]{\renewcommand{\ArcanaSkillModifierValue}{#1}}
-\newcommand{\AthleticsSkillModifier}[1]{\renewcommand{\AthleticsSkillModifierValue}{#1}}
-\newcommand{\DeceptionSkillModifier}[1]{\renewcommand{\DeceptionSkillModifierValue}{#1}}
-\newcommand{\HistorySkillModifier}[1]{\renewcommand{\HistorySkillModifierValue}{#1}}
-\newcommand{\InsightSkillModifier}[1]{\renewcommand{\InsightSkillModifierValue}{#1}}
-\newcommand{\IntimidationSkillModifier}[1]{\renewcommand{\IntimidationSkillModifierValue}{#1}}
-\newcommand{\InvestigationSkillModifier}[1]{\renewcommand{\InvestigationSkillModifierValue}{#1}}
-\newcommand{\MedicineSkillModifier}[1]{\renewcommand{\MedicineSkillModifierValue}{#1}}
-\newcommand{\NatureSkillModifier}[1]{\renewcommand{\NatureSkillModifierValue}{#1}}
-\newcommand{\PerceptionSkillModifier}[1]{\renewcommand{\PerceptionSkillModifierValue}{#1}}
-\newcommand{\PerformanceSkillModifier}[1]{\renewcommand{\PerformanceSkillModifierValue}{#1}}
-\newcommand{\PersuasionSkillModifier}[1]{\renewcommand{\PersuasionSkillModifierValue}{#1}}
-\newcommand{\ReligionSkillModifier}[1]{\renewcommand{\ReligionSkillModifierValue}{#1}}
-\newcommand{\SleightOfHandSkillModifier}[1]{\renewcommand{\SleightOfHandSkillModifierValue}{#1}}
-\newcommand{\StealthSkillModifier}[1]{\renewcommand{\StealthSkillModifierValue}{#1}}
-\newcommand{\SurvivalSkillModifier}[1]{\renewcommand{\SurvivalSkillModifierValue}{#1}}
+\newcommand{\AcrobaticsProficiency}[1]{\SetProf{AcrobaticsMod}{acrobaticsproficiency}{\theDexMod}{#1}}
+\newcommand{\AnimalHandlingProficiency}[1]{\SetProf{AnimalHandlingMod}{animalhandlingproficiency}{\theWisMod}{#1}}
+\newcommand{\ArcanaProficiency}[1]{\SetProf{ArcanaMod}{arcanaproficiency}{\theIntMod}{#1}}
+\newcommand{\AthleticsProficiency}[1]{\SetProf{AthleticsMod}{athleticsproficiency}{\theStrMod}{#1}}
+\newcommand{\DeceptionProficiency}[1]{\SetProf{DeceptionMod}{deceptionproficiency}{\theChaMod}{#1}}
+\newcommand{\HistoryProficiency}[1]{\SetProf{HistoryMod}{historyproficiency}{\theIntMod}{#1}}
+\newcommand{\InsightProficiency}[1]{\SetProf{InsightMod}{insightproficiency}{\theWisMod}{#1}}
+\newcommand{\IntimidationProficiency}[1]{\SetProf{IntimidationMod}{intimidationproficiency}{\theChaMod}{#1}}
+\newcommand{\InvestigationProficiency}[1]{\SetProf{InvestigationMod}{investigationproficiency}{\theIntMod}{#1}}
+\newcommand{\MedicineProficiency}[1]{\SetProf{MedicineMod}{medicineproficiency}{\theWisMod}{#1}}
+\newcommand{\NatureProficiency}[1]{\SetProf{NatureMod}{natureproficiency}{\theIntMod}{#1}}
+\newcommand{\PerceptionProficiency}[1]{\SetProf{PerceptionMod}{perceptionproficiency}{\theWisMod}{#1}}
+\newcommand{\PerformanceProficiency}[1]{\SetProf{PerformanceMod}{performanceproficiency}{\theChaMod}{#1}}
+\newcommand{\PersuasionProficiency}[1]{\SetProf{PersuasionMod}{persuasionproficiency}{\theChaMod}{#1}}
+\newcommand{\ReligionProficiency}[1]{\SetProf{ReligionMod}{religionproficiency}{\theIntMod}{#1}}
+\newcommand{\SleightOfHandProficiency}[1]{\SetProf{SleightOfHandMod}{sleightofhandproficiency}{\theDexMod}{#1}}
+\newcommand{\StealthProficiency}[1]{\SetProf{StealthMod}{stealthproficiency}{\theDexMod}{#1}}
+\newcommand{\SurvivalProficiency}[1]{\SetProf{SurvivalMod}{survivalproficiency}{\theWisMod}{#1}}
+
+\newcommand{\AcrobaticsBonus}[1]{\addtocounter{AcrobaticsMod}{#1}}
+\newcommand{\AnimalHandlingBonus}[1]{\addtocounter{AnimalHandlingMod}{#1}}
+\newcommand{\ArcanaBonus}[1]{\addtocounter{ArcanaMod}{#1}}
+\newcommand{\AthleticsBonus}[1]{\addtocounter{AthleticsMod}{#1}}
+\newcommand{\DeceptionBonus}[1]{\addtocounter{DeceptionMod}{#1}}
+\newcommand{\HistoryBonus}[1]{\addtocounter{HistoryMod}{#1}}
+\newcommand{\InsightBonus}[1]{\addtocounter{InsightMod}{#1}}
+\newcommand{\IntimidationBonus}[1]{\addtocounter{IntimidationMod}{#1}}
+\newcommand{\InvestigationBonus}[1]{\addtocounter{InvestigationMod}{#1}}
+\newcommand{\MedicineBonus}[1]{\addtocounter{MedicineMod}{#1}}
+\newcommand{\NatureBonus}[1]{\addtocounter{NatureMod}{#1}}
+\newcommand{\PerceptionBonus}[1]{\addtocounter{PerceptionMod}{#1}}
+\newcommand{\PerformanceBonus}[1]{\addtocounter{PerformanceMod}{#1}}
+\newcommand{\PersuasionBonus}[1]{\addtocounter{PersuasionMod}{#1}}
+\newcommand{\ReligionBonus}[1]{\addtocounter{ReligionMod}{#1}}
+\newcommand{\SleightOfHandBonus}[1]{\addtocounter{SleightOfHandMod}{#1}}
+\newcommand{\StealthBonus}[1]{\addtocounter{StealthMod}{#1}}
+\newcommand{\SurvivalBonus}[1]{\addtocounter{SurvivalMod}{#1}}
+
+\newcommand{\StrengthSavingThrowModifierValue}{\ModPlusPrefix{\theStrStMod}}
+\newcommand{\DexteritySavingThrowModifierValue}{\ModPlusPrefix{\theDexStMod}}
+\newcommand{\ConstitutionSavingThrowModifierValue}{\ModPlusPrefix{\theConStMod}}
+\newcommand{\IntelligenceSavingThrowModifierValue}{\ModPlusPrefix{\theIntStMod}}
+\newcommand{\WisdomSavingThrowModifierValue}{\ModPlusPrefix{\theWisStMod}}
+\newcommand{\CharismaSavingThrowModifierValue}{\ModPlusPrefix{\theChaStMod}}
+\newcommand{\AcrobaticsSkillModifierValue}{\ModPlusPrefix{\theAcrobaticsMod}}
+\newcommand{\AnimalHandlingSkillModifierValue}{\ModPlusPrefix{\theAnimalHandlingMod}}
+\newcommand{\ArcanaSkillModifierValue}{\ModPlusPrefix{\theArcanaMod}}
+\newcommand{\AthleticsSkillModifierValue}{\ModPlusPrefix{\theAthleticsMod}}
+\newcommand{\DeceptionSkillModifierValue}{\ModPlusPrefix{\theDeceptionMod}}
+\newcommand{\HistorySkillModifierValue}{\ModPlusPrefix{\theHistoryMod}}
+\newcommand{\InsightSkillModifierValue}{\ModPlusPrefix{\theInsightMod}}
+\newcommand{\IntimidationSkillModifierValue}{\ModPlusPrefix{\theIntimidationMod}}
+\newcommand{\InvestigationSkillModifierValue}{\ModPlusPrefix{\theInvestigationMod}}
+\newcommand{\MedicineSkillModifierValue}{\ModPlusPrefix{\theMedicineMod}}
+\newcommand{\NatureSkillModifierValue}{\ModPlusPrefix{\theNatureMod}}
+\newcommand{\PerceptionSkillModifierValue}{\ModPlusPrefix{\thePerceptionMod}}
+\newcommand{\PerformanceSkillModifierValue}{\ModPlusPrefix{\thePerformanceMod}}
+\newcommand{\PersuasionSkillModifierValue}{\ModPlusPrefix{\thePersuasionMod}}
+\newcommand{\ReligionSkillModifierValue}{\ModPlusPrefix{\theReligionMod}}
+\newcommand{\SleightOfHandSkillModifierValue}{\ModPlusPrefix{\theSleightOfHandMod}}
+\newcommand{\StealthSkillModifierValue}{\ModPlusPrefix{\theStealthMod}}
+\newcommand{\SurvivalSkillModifierValue}{\ModPlusPrefix{\theSurvivalMod}}
+
+\newcounter{PassivePerception}
+\newcommand{\PerceptionValue}{\setcounter{PassivePerception}{10+\thePerceptionMod}\thePassivePerception}
 
 % BATTLE STATS
-\newcommand{\ArmorClassValue}{}
-\newcommand{\InitiativeValue}{}
+\newcounter{ArmorClass}
+\newcommand{\LightArmor}[1]{\setcounter{ArmorClass}{#1+\theDexMod}}
+\newcommand{\MediumArmor}[1]{\setcounter{ArmorClass}{#1+\minof{\theDexMod}{2}}}
+\newcommand{\HeavyArmor}[1]{\setcounter{ArmorClass}{#1}}
+
+\newcommand{\ArmorClassValue}{\theArmorClass}
+\newcommand{\InitiativeValue}{\ModPlusPrefix{\theDexMod}}
 \newcommand{\SpeedValue}{}
 \newcommand{\MaxHitPointsValue}{}
 \newcommand{\CurrentHitPointsValue}{}
@@ -118,8 +238,6 @@
 \newcommand{\MaxHitDiceValue}{}
 \newcommand{\CurrentHitDiceValue}{}
 
-\newcommand{\ArmorClass}[1]{\renewcommand{\ArmorClassValue}{#1}}
-\newcommand{\Initiative}[1]{\renewcommand{\InitiativeValue}{#1}}
 \newcommand{\Speed}[1]{\renewcommand{\SpeedValue}{#1}}
 \newcommand{\MaxHitPoints}[1]{\renewcommand{\MaxHitPointsValue}{#1}}
 \newcommand{\CurrentHitPoints}[1]{\renewcommand{\CurrentHitPointsValue}{#1}}
@@ -154,9 +272,26 @@
 % WEAPONS GENERATOR COMMAND
 \newcommand\WeaponsHeld{}
 
+\newcounter{WeaponStrAtkBonus}
+\newcounter{WeaponDexAtkBonus}
+
 \makeatletter
-\newcommand\AddWeapon[3]{%
-  \g@addto@macro\WeaponsHeld{\\ \entryfont #1 & \entryfont #2 & \entryfont #3}
+\newcommand\AddStrWeapon[3]{%
+    \g@addto@macro\WeaponsHeld{\\ \entryfont #1 & \entryfont \ModPlusPrefix{\theStrMod} & \entryfont #2\ModPlusPrefix{\theStrMod} #3}
+}
+
+\newcommand\AddDexWeapon[3]{%
+    \g@addto@macro\WeaponsHeld{\\ \entryfont #1 & \entryfont \ModPlusPrefix{\theDexMod} & \entryfont #2\ModPlusPrefix{\theDexMod} #3}
+}
+
+\newcommand\AddProficientStrWeapon[3]{%
+    \setcounter{WeaponStrAtkBonus}{\theStrMod+\theProficiencyBonus}%
+    \g@addto@macro\WeaponsHeld{\\ \entryfont #1 & \entryfont \ModPlusPrefix{\theWeaponStrAtkBonus} & \entryfont #2\ModPlusPrefix{\theStrMod} #3}
+}
+
+\newcommand\AddProficientDexWeapon[3]{%
+    \setcounter{WeaponDexAtkBonus}{\theDexMod+\theProficiencyBonus}%
+    \g@addto@macro\WeaponsHeld{\\ \entryfont #1 & \entryfont \ModPlusPrefix{\theWeaponDexAtkBonus} & \entryfont #2\ModPlusPrefix{\theDexMod} #3}
 }
 \makeatother
 
@@ -204,14 +339,17 @@
 % SPELL MODIFIERS
 \newcommand{\SpellcastingClassValue}{}
 \newcommand{\SpellcastingAbilityValue}{}
-\newcommand{\SpellSaveDCValue}{}
-\newcommand{\SpellAttackBonusValue}{}
+\newcounter{SpellAttackBonus}
+\newcounter{SpellSaveDC}
 
 \newcommand{\SpellcastingClass}[1]{\renewcommand{\SpellcastingClassValue}{#1}}
-\newcommand{\SpellcastingAbility}[1]{\renewcommand{\SpellcastingAbilityValue}{#1}}
-\newcommand{\SpellSaveDC}[1]{\renewcommand{\SpellSaveDCValue}{#1}}
-\newcommand{\SpellAttackBonus}[1]{\renewcommand{\SpellAttackBonusValue}{#1}}
+\newcommand{\SpellcastingAbility}[1]{\renewcommand{\SpellcastingAbilityValue}{#1}
+    \setcounter{SpellAttackBonus}{\value{#1Mod}+\theProficiencyBonus}
+    \setcounter{SpellSaveDC}{8+\theSpellAttackBonus}
+}
 
+\newcommand{\SpellSaveDCValue}{\theSpellSaveDC}
+\newcommand{\SpellAttackBonusValue}{\ModPlusPrefix{\theSpellAttackBonus}}
 
 % TOTAL SPELL SLOTS
 \newcommand{\FirstLevelSpellSlotsTotalValue}{}
@@ -467,31 +605,7 @@
 \newcommand{\NinthLevelSpellSlotG}[1]{\renewcommand{\NinthLevelSpellSlotGValue}{#1}}
 
 % PROFICIENCY COLOR CHANGES
-\newrgbcolor{strengthproficiency}{1 1 1}\newcommand{\StrengthProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{strengthproficiency}{0 0 0}}{}}
-\newrgbcolor{dexterityproficiency}{1 1 1}\newcommand{\DexterityProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{dexterityproficiency}{0 0 0}}{}}
-\newrgbcolor{constitutionproficiency}{1 1 1}\newcommand{\ConstitutionProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{constitutionproficiency}{0 0 0}}{}}
-\newrgbcolor{intelligenceproficiency}{1 1 1}\newcommand{\IntelligenceProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{intelligenceproficiency}{0 0 0}}{}}
-\newrgbcolor{wisdomproficiency}{1 1 1}\newcommand{\WisdomProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{wisdomproficiency}{0 0 0}}{}}
-\newrgbcolor{charismaproficiency}{1 1 1}\newcommand{\CharismaProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{charismaproficiency}{0 0 0}}{}}
-\newrgbcolor{acrobaticsproficiency}{1 1 1}\newcommand{\AcrobaticsProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{acrobaticsproficiency}{0 0 0}}{}}
 
-\newrgbcolor{animalhandlingproficiency}{1 1 1}\newcommand{\AnimalHandlingProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{animalhandlingproficiency}{0 0 0}}{}}
-\newrgbcolor{arcanaproficiency}{1 1 1}\newcommand{\ArcanaProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{arcanaproficiency}{0 0 0}}{}}
-\newrgbcolor{athleticsproficiency}{1 1 1}\newcommand{\AthleticsProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{athleticsproficiency}{0 0 0}}{}}
-\newrgbcolor{deceptionproficiency}{1 1 1}\newcommand{\DeceptionProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{deceptionproficiency}{0 0 0}}{}}
-\newrgbcolor{historyproficiency}{1 1 1}\newcommand{\HistoryProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{historyproficiency}{0 0 0}}{}}
-\newrgbcolor{insightproficiency}{1 1 1}\newcommand{\InsightProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{insightproficiency}{0 0 0}}{}}
-\newrgbcolor{intimidationproficiency}{1 1 1}\newcommand{\IntimidationProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{intimidationproficiency}{0 0 0}}{}}
-\newrgbcolor{investigationproficiency}{1 1 1}\newcommand{\InvestigationProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{investigationproficiency}{0 0 0}}{}}
-\newrgbcolor{medicineproficiency}{1 1 1}\newcommand{\MedicineProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{medicineproficiency}{0 0 0}}{}}
-\newrgbcolor{natureproficiency}{1 1 1}\newcommand{\NatureProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{natureproficiency}{0 0 0}}{}}
-\newrgbcolor{perceptionproficiency}{1 1 1}\newcommand{\PerceptionProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{perceptionproficiency}{0 0 0}}{}}
-\newrgbcolor{performanceproficiency}{1 1 1}\newcommand{\PerformanceProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{performanceproficiency}{0 0 0}}{}}
-\newrgbcolor{persuasionproficiency}{1 1 1}\newcommand{\PersuasionProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{persuasionproficiency}{0 0 0}}{}}
-\newrgbcolor{religionproficiency}{1 1 1}\newcommand{\ReligionProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{religionproficiency}{0 0 0}}{}}
-\newrgbcolor{sleightofhandproficiency}{1 1 1}\newcommand{\SleightOfHandProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{sleightofhandproficiency}{0 0 0}}{}}
-\newrgbcolor{stealthproficiency}{1 1 1}\newcommand{\StealthProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{stealthproficiency}{0 0 0}}{}}
-\newrgbcolor{survivalproficiency}{1 1 1}\newcommand{\SurvivalProficiency}[1]{\ifthenelse{\equal{#1}{True}}{\newrgbcolor{survivalproficiency}{0 0 0}}{}}
 % SPELL PREPARED COLOR CHANGES
 
 % LEVEL 1
